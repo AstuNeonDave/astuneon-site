@@ -1,0 +1,213 @@
+/* V2 — "Porta" · the luminous threshold, Ostuni at night */
+
+.page {
+  position: relative;
+  min-height: 100svh;
+  background: radial-gradient(
+      ellipse 90% 70% at 75% 45%,
+      rgba(26, 38, 68, 0.85) 0%,
+      transparent 60%
+    ),
+    linear-gradient(180deg, #0b1122 0%, #060a15 100%);
+  color: #e9eaf2;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 300;
+  overflow: hidden;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* The door — an arch of light at the threshold */
+.door {
+  position: absolute;
+  right: clamp(6vw, 10vw, 14vw);
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(150px, 17vw, 230px);
+  height: min(62vh, 560px);
+  border-radius: 999px 999px 0 0;
+  background: linear-gradient(
+    180deg,
+    rgba(244, 233, 202, 0.92) 0%,
+    rgba(226, 195, 122, 0.5) 45%,
+    rgba(201, 163, 92, 0.12) 85%,
+    transparent 100%
+  );
+  filter: blur(3px);
+  animation: flicker 9s ease-in-out infinite;
+}
+
+.doorHalo {
+  position: absolute;
+  right: calc(clamp(6vw, 10vw, 14vw) - 12vmax);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46vmax;
+  height: 46vmax;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(226, 195, 122, 0.22) 0%,
+    rgba(226, 195, 122, 0.06) 45%,
+    transparent 70%
+  );
+  filter: blur(60px);
+  animation: flicker 9s 0.4s ease-in-out infinite;
+}
+
+.grain {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.06;
+  animation: grainShift 0.9s steps(4) infinite;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 clamp(24px, 5vw, 64px);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: clamp(36px, 6vh, 64px) 0 0;
+}
+
+.logo {
+  display: block;
+  width: clamp(96px, 11vw, 140px);
+  height: auto;
+  color: #e9eaf2;
+}
+
+.logoLink {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: rgba(233, 234, 242, 0.45);
+}
+
+.nav a {
+  text-decoration: none;
+}
+
+.nav a[aria-current] {
+  color: #e2c37a;
+}
+
+.hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(64px, 12vh, 128px) 0;
+  max-width: 60%;
+}
+
+.hero h1 {
+  font-weight: 200;
+  font-size: clamp(1.9rem, 4.2vw, 3.7rem);
+  line-height: 1.24;
+  letter-spacing: 0.014em;
+  max-width: 22ch;
+  animation: rise 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero p {
+  margin-top: clamp(32px, 5vh, 56px);
+  font-size: clamp(0.98rem, 1.3vw, 1.15rem);
+  line-height: 1.9;
+  letter-spacing: 0.018em;
+  max-width: 52ch;
+  color: rgba(233, 234, 242, 0.66);
+  animation: rise 1.2s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.footer {
+  padding: 40px 0 48px;
+  border-top: 1px solid rgba(233, 234, 242, 0.12);
+  color: rgba(233, 234, 242, 0.45);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    max-width: 100%;
+  }
+  .door,
+  .doorHalo {
+    opacity: 0.35;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.82;
+  }
+}
+
+@keyframes grainShift {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-2%, 3%);
+  }
+  50% {
+    transform: translate(3%, -2%);
+  }
+  75% {
+    transform: translate(-3%, -3%);
+  }
+  100% {
+    transform: translate(2%, 2%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero h1,
+  .hero p,
+  .door,
+  .doorHalo,
+  .grain {
+    animation: none;
+  }
+}
