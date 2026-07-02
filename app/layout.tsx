@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import { Aboreto, Noto_Serif_Georgian } from "next/font/google";
+import { Jost } from "next/font/google";
 import "./globals.css";
 
-const aboreto = Aboreto({
-  weight: "400",
+const jost = Jost({
+  weight: ["200", "300", "400"],
   subsets: ["latin"],
-  variable: "--font-display",
-});
-
-const notoSerif = Noto_Serif_Georgian({
-  subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -25,9 +20,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${aboreto.variable} ${notoSerif.variable}`}>
-        {children}
-      </body>
+      <body className={jost.variable}>{children}</body>
     </html>
   );
 }

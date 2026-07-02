@@ -1,10 +1,12 @@
+import Logo from "./Logo";
+
 export default function Home() {
   return (
     <main>
       <div className="container">
         <header className="header">
-          <a className="wordmark" href="/">
-            Astu Neon
+          <a className="logo-link" href="/">
+            <Logo className="logo" />
           </a>
         </header>
 
