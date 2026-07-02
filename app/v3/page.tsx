@@ -19,6 +19,9 @@ export default function Marmo() {
             <a href="/v3" aria-current="page">
               III
             </a>
+            <a href="/v4">IV</a>
+            <a href="/v5">V</a>
+            <a href="/v6">VI</a>
           </nav>
         </header>
 
