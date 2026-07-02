@@ -1,0 +1,143 @@
+:root {
+  --ink: #101010;
+  --paper: #f7f5f0;
+  --accent: #1f3a5f; /* Ostuni door blue */
+  --muted: #6b6b66;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body), serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), serif;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+a {
+  color: inherit;
+}
+
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32px 0;
+}
+
+.wordmark {
+  font-family: var(--font-display), serif;
+  font-size: 1.25rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* Hero */
+.hero {
+  padding: 18vh 0 14vh;
+}
+
+.hero h1 {
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  line-height: 1.15;
+  max-width: 18ch;
+}
+
+.hero p {
+  margin-top: 28px;
+  font-size: 1.15rem;
+  max-width: 44ch;
+  color: var(--muted);
+}
+
+.cta {
+  display: inline-block;
+  margin-top: 40px;
+  padding: 14px 36px;
+  border: 1px solid var(--ink);
+  text-decoration: none;
+  font-family: var(--font-display), serif;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  transition: background 0.3s, color 0.3s;
+}
+
+.cta:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Houses */
+.houses {
+  padding: 10vh 0;
+  border-top: 1px solid #ddd8ce;
+}
+
+.houses h2 {
+  font-size: 1rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 48px;
+}
+
+.house-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 40px;
+}
+
+.house h3 {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+}
+
+.house p {
+  color: var(--muted);
+  font-size: 0.98rem;
+}
+
+.house a {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+}
+
+/* Footer */
+.footer {
+  padding: 60px 0;
+  border-top: 1px solid #ddd8ce;
+  color: var(--muted);
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
