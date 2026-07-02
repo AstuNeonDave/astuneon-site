@@ -17,14 +17,14 @@ export default function Viaggio() {
   return (
     <main className={s.page}>
       <nav className={s.nav} aria-label="Versions">
-        <a href="/v1">I</a>
-        <a href="/v2">II</a>
-        <a href="/v3">III</a>
         <a href="/v4" aria-current="page">
           IV
         </a>
         <a href="/v5">V</a>
         <a href="/v6">VI</a>
+        <a href="/v7">VII</a>
+        <a href="/v8">VIII</a>
+        <a href="/v9">IX</a>
       </nav>
 
       <section

@@ -18,14 +18,14 @@ export default function Rivista() {
     <main className={s.page}>
       <header className={s.masthead}>
         <nav className={s.nav} aria-label="Versions">
-          <a href="/v1">I</a>
-          <a href="/v2">II</a>
-          <a href="/v3">III</a>
           <a href="/v4">IV</a>
           <a href="/v5" aria-current="page">
             V
           </a>
           <a href="/v6">VI</a>
+          <a href="/v7">VII</a>
+          <a href="/v8">VIII</a>
+          <a href="/v9">IX</a>
         </nav>
         <a className={s.logoLink} href="/">
           <Logo className={s.logo} />

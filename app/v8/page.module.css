@@ -1,0 +1,172 @@
+/* V8 — "Le Porte" · one house, many doors */
+
+.page {
+  min-height: 100svh;
+  background: linear-gradient(180deg, #f6f1e6 0%, #efe7d6 100%);
+  color: #241d12;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 300;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: clamp(32px, 5vh, 56px) clamp(24px, 5vw, 64px) 0;
+}
+
+.logoLink {
+  display: inline-block;
+}
+
+.logo {
+  width: clamp(96px, 11vw, 132px);
+  height: auto;
+  color: #241d12;
+}
+
+.nav {
+  display: flex;
+  gap: 16px;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  color: rgba(36, 29, 18, 0.5);
+}
+
+.nav a {
+  text-decoration: none;
+}
+
+.nav a[aria-current] {
+  color: #b0812e;
+}
+
+.hero {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: clamp(56px, 10vh, 110px) clamp(24px, 5vw, 64px) 0;
+  text-align: center;
+}
+
+.question {
+  font-family: var(--font-serif), serif;
+  font-weight: 300;
+  font-size: clamp(2rem, 4.4vw, 3.8rem);
+  line-height: 1.18;
+}
+
+.answer {
+  margin-top: clamp(28px, 4vh, 44px);
+  font-size: clamp(0.98rem, 1.3vw, 1.15rem);
+  line-height: 1.9;
+  letter-spacing: 0.015em;
+  color: rgba(53, 44, 29, 0.78);
+}
+
+.colonnade {
+  max-width: 1240px;
+  margin: clamp(56px, 10vh, 110px) auto 0;
+  padding: 0 clamp(24px, 5vw, 64px);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: clamp(20px, 2.5vw, 36px);
+  align-items: end;
+}
+
+.door {
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  display: block;
+}
+
+.arch {
+  display: block;
+  width: 100%;
+  max-width: 150px;
+  margin: 0 auto;
+  aspect-ratio: 3 / 4.8;
+  border: 1px solid rgba(36, 29, 18, 0.55);
+  border-radius: 999px 999px 0 0;
+  background: linear-gradient(
+    180deg,
+    rgba(226, 195, 122, 0.32) 0%,
+    rgba(176, 129, 46, 0.12) 55%,
+    rgba(36, 29, 18, 0.06) 100%
+  );
+  box-shadow: inset 0 0 34px rgba(176, 129, 46, 0.12);
+  transition: background 0.7s ease, box-shadow 0.7s ease, transform 0.7s ease;
+  animation: glowPass 7s ease-in-out infinite;
+}
+
+.door:hover .arch,
+.door:focus-visible .arch {
+  background: linear-gradient(
+    180deg,
+    rgba(244, 226, 176, 0.85) 0%,
+    rgba(226, 195, 122, 0.4) 60%,
+    rgba(176, 129, 46, 0.14) 100%
+  );
+  box-shadow: inset 0 0 44px rgba(226, 195, 122, 0.5),
+    0 18px 44px -18px rgba(36, 29, 18, 0.35);
+  transform: translateY(-6px);
+}
+
+.doorDomain {
+  display: block;
+  margin-top: 18px;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #241d12;
+}
+
+.doorLabel {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.74rem;
+  letter-spacing: 0.05em;
+  color: rgba(53, 44, 29, 0.6);
+}
+
+.coda {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: clamp(56px, 10vh, 100px) clamp(24px, 5vw, 64px) 0;
+  text-align: center;
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  color: #241d12;
+}
+
+.footer {
+  max-width: 1240px;
+  margin: clamp(48px, 8vh, 88px) auto 0;
+  padding: 28px clamp(24px, 5vw, 64px) 44px;
+  border-top: 1px solid rgba(36, 29, 18, 0.16);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(53, 44, 29, 0.55);
+}
+
+@keyframes glowPass {
+  0%,
+  100% {
+    box-shadow: inset 0 0 34px rgba(176, 129, 46, 0.12);
+  }
+  50% {
+    box-shadow: inset 0 0 48px rgba(226, 195, 122, 0.34);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arch {
+    animation: none;
+  }
+}

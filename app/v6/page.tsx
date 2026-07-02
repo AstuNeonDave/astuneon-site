@@ -18,14 +18,14 @@ export default function Soglia() {
           <Logo className={s.logo} />
         </a>
         <nav className={s.nav} aria-label="Versions">
-          <a href="/v1">I</a>
-          <a href="/v2">II</a>
-          <a href="/v3">III</a>
           <a href="/v4">IV</a>
           <a href="/v5">V</a>
           <a href="/v6" aria-current="page">
             VI
           </a>
+          <a href="/v7">VII</a>
+          <a href="/v8">VIII</a>
+          <a href="/v9">IX</a>
         </nav>
       </header>
 
