@@ -35,6 +35,9 @@ export default function Costellazione() {
           </a>
           <a href="/v8">VIII</a>
           <a href="/v9">IX</a>
+          <a href="/v10">X</a>
+          <a href="/v11">XI</a>
+          <a href="/v12">XII</a>
         </nav>
       </header>
 
