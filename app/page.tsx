@@ -3,6 +3,15 @@ import Logo from "./Logo";
 export default function Home() {
   return (
     <main>
+      {/* Graphical treatment — decorative only */}
+      <div className="scene" aria-hidden="true">
+        <div className="glow glow-warm" />
+        <div className="glow glow-cool" />
+        <Logo className="ghost-mark" />
+        <div className="vignette" />
+        <div className="grain" />
+      </div>
+
       <div className="container">
         <header className="header">
           <a className="logo-link" href="/">
@@ -11,6 +20,7 @@ export default function Home() {
         </header>
 
         <section className="hero">
+          <span className="rule" aria-hidden="true" />
           <h1>
             What if we, just you and I, built a whole economy? Bottled a
             sun-drenched paradise to share around a table? What if we asked the
