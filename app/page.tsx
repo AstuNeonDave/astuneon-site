@@ -9,57 +9,25 @@ export default function Home() {
         </header>
 
         <section className="hero">
-          <h1>An ecosystem for resilience and innovation.</h1>
+          <h1>
+            What if we, just you and I, built a whole economy? Bottled a
+            sun-drenched paradise to share around a table? What if we asked the
+            most impossible questions, stowed away a myopic life?
+          </h1>
           <p>
-            Prompting our clients to dream bigger. What if we, just you and I,
-            built a whole economy? Here, there are no ceilings — only horizons.
+            At Astu Neon, we don’t shy away from these challenges, we answer
+            them. Opening doors, stepping into a boundless universe. An
+            invitation to connection, the exchange of ideas, and a dynamic
+            life. Because dreaming belongs to everyone. It is a catalyst for
+            belonging, giving us a seat at our table where we remember our most
+            naive, uninhibited dreams: to reach the moon, to create new things,
+            to heal. Challenging the impossible. Building it with our own
+            hands.
           </p>
-          <a className="cta" href="mailto:dave@astuneon.co">
-            Step Through
-          </a>
-        </section>
-
-        <section className="houses">
-          <h2>The Houses of Astu Neon</h2>
-          <div className="house-grid">
-            <div className="house">
-              <h3>Olive Oil</h3>
-              <p>
-                A sun-drenched paradise, bottled. The door to Puglia, its
-                heritage, and elegance refined to its purest expression.
-              </p>
-              <a href="https://myastuneon.com">myastuneon.com</a>
-            </div>
-            <div className="house">
-              <h3>Platform</h3>
-              <p>
-                Technology built with 80% Italian hands, codes, and minds —
-                connecting travelers to the living culture of Puglia.
-              </p>
-              <a href="https://astuneon.ai">astuneon.ai</a>
-            </div>
-            <div className="house">
-              <h3>Studio</h3>
-              <p>
-                Stories of the people and places challenging the impossible,
-                told in documentary form.
-              </p>
-              <a href="https://astuneon.studio">astuneon.studio</a>
-            </div>
-            <div className="house">
-              <h3>Consulting</h3>
-              <p>
-                A cure to the myopic life — helping builders ask the most
-                impossible questions, then answer them.
-              </p>
-              <a href="https://astuneon.tech">astuneon.tech</a>
-            </div>
-          </div>
         </section>
 
         <footer className="footer">
           <span>© {new Date().getFullYear()} Astu Neon, Inc.</span>
-          <span>Because dreaming belongs to everyone.</span>
         </footer>
       </div>
     </main>
