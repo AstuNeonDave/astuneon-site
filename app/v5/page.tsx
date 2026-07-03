@@ -1,5 +1,6 @@
 import Logo from "../Logo";
 import OliveBranch from "./OliveBranch";
+import VersionNav from "../VersionNav";
 import s from "./page.module.css";
 
 /* Adobe Stock comps (watermarked previews — license before launch):
@@ -17,16 +18,7 @@ export default function Rivista() {
   return (
     <main className={s.page}>
       <header className={s.masthead}>
-        <nav className={s.nav} aria-label="Versions">
-          <a href="/v4">IV</a>
-          <a href="/v5" aria-current="page">
-            V
-          </a>
-          <a href="/v6">VI</a>
-          <a href="/v7">VII</a>
-          <a href="/v8">VIII</a>
-          <a href="/v9">IX</a>
-        </nav>
+        <VersionNav className={s.nav} current={5} />
         <a className={s.logoLink} href="/">
           <Logo className={s.logo} />
         </a>

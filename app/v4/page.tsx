@@ -1,4 +1,5 @@
 import Logo from "../Logo";
+import VersionNav from "../VersionNav";
 import s from "./page.module.css";
 
 /* Adobe Stock comps (watermarked previews — license before launch):
@@ -16,16 +17,7 @@ const IMG = {
 export default function Viaggio() {
   return (
     <main className={s.page}>
-      <nav className={s.nav} aria-label="Versions">
-        <a href="/v4" aria-current="page">
-          IV
-        </a>
-        <a href="/v5">V</a>
-        <a href="/v6">VI</a>
-        <a href="/v7">VII</a>
-        <a href="/v8">VIII</a>
-        <a href="/v9">IX</a>
-      </nav>
+      <VersionNav className={s.nav} current={4} />
 
       <section
         className={s.chapter}

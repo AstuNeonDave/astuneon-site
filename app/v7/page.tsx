@@ -1,4 +1,5 @@
 import Logo from "../Logo";
+import VersionNav from "../VersionNav";
 import { BRANCHES } from "../branches";
 import s from "./page.module.css";
 
@@ -26,19 +27,7 @@ export default function Costellazione() {
         <a className={s.logoLink} href="/">
           <Logo className={s.logo} />
         </a>
-        <nav className={s.nav} aria-label="Versions">
-          <a href="/v4">IV</a>
-          <a href="/v5">V</a>
-          <a href="/v6">VI</a>
-          <a href="/v7" aria-current="page">
-            VII
-          </a>
-          <a href="/v8">VIII</a>
-          <a href="/v9">IX</a>
-          <a href="/v10">X</a>
-          <a href="/v11">XI</a>
-          <a href="/v12">XII</a>
-        </nav>
+        <VersionNav className={s.nav} current={7} />
       </header>
 
       <section className={s.sky}>
