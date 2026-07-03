@@ -6,22 +6,16 @@ import VersionNav from "../VersionNav";
 import { BRANCHES } from "../branches";
 import s from "./page.module.css";
 
-/* V23 — "L'Alba" · first draft of the final site.
-   One long scroll from night to dawn:
-   1. Arrival — only stars and the mark, centered in the night.
-   2. Scroll — the mark rises away, the questions fade in, and the mark
-      settles quietly into the corner a beat later.
-   3. The sky begins to lighten; the golden astrolabe unfolds, its
-      tip-stars beckoning in turn; names appear on hover, outside the dial.
-   4. Lighter still — the answer.
-   5. At the brightest edge of dawn, sunrise clouds part to reveal the
-      final words and the imprint. */
+/* V23 — "L'Alba" · second draft.
+   The opening scene (mark alone in the night) plays once per page load;
+   after it completes, the pin collapses and the top of the site becomes
+   corner-mark + questions. The engraved clouds part and close with the
+   scroll, as many times as you like. */
 
 const C = 500;
 const CY = 590;
 const BEACON = 1.3;
 
-/* pointers offset half a step so none aims due north */
 function angleOf(i: number, n: number) {
   return ((-90 + ((i + 0.5) * 360) / n) * Math.PI) / 180;
 }
@@ -55,7 +49,6 @@ function tipPos(i: number, n: number) {
   return { x: C + r1 * Math.cos(a), y: CY + r1 * Math.sin(a), a };
 }
 
-/* label sits outside the dial, beside the tip-star */
 function labelLayout(i: number, n: number) {
   const t = tipPos(i, n);
   const rl = (i % 2 === 0 ? 348 : 278) + 24;
@@ -65,11 +58,7 @@ function labelLayout(i: number, n: number) {
   const sin = Math.sin(t.a);
   if (cos > 0.25) return { x: x + 8, y: y + 4, anchor: "start" as const };
   if (cos < -0.25) return { x: x - 8, y: y + 4, anchor: "end" as const };
-  return {
-    x,
-    y: y + (sin > 0 ? 30 : -22),
-    anchor: "middle" as const,
-  };
+  return { x, y: y + (sin > 0 ? 30 : -22), anchor: "middle" as const };
 }
 
 function seeded(seed: number) {
@@ -93,13 +82,52 @@ function starField(seed: number, count: number, alpha: number) {
   return out.join(",");
 }
 
+/* engraved cloud — scalloped line-work in the astrolabe's hand */
+function Cloud({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 640 300"
+      xmlns="http://www.w3.org/2000/svg"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <path
+        className={s.cloudBody}
+        d="M86,236 Q40,236 36,196 Q32,156 76,148 Q68,106 114,96 Q124,58 172,64 Q192,26 244,38 Q288,10 336,36 Q384,20 412,58 Q462,50 480,94 Q528,96 534,142 Q572,152 566,194 Q560,232 516,236 Z"
+      />
+      <path
+        className={s.cloudLine}
+        d="M120,196 Q160,178 208,190 Q252,168 306,184"
+      />
+      <path
+        className={s.cloudLine}
+        d="M348,178 Q394,160 442,176 Q474,166 502,180"
+      />
+      <path
+        className={s.cloudLine}
+        d="M180,128 Q222,112 264,126 Q306,104 352,122"
+      />
+    </svg>
+  );
+}
+
 export default function Alba() {
   const n = BRANCHES.length;
   const mainRef = useRef<HTMLElement | null>(null);
   const astroRef = useRef<HTMLElement | null>(null);
+  const revealRef = useRef<HTMLDivElement | null>(null);
+  const introDoneRef = useRef(false);
+  const [introDone, setIntroDone] = useState(false);
   const [wordsIn, setWordsIn] = useState(false);
   const [live, setLive] = useState(false);
-  const [open, setOpen] = useState(false);
+
+  /* the opening scene plays once per load — always start at the top */
+  useEffect(() => {
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -107,14 +135,38 @@ export default function Alba() {
       if (!el) return;
       const vh = window.innerHeight;
       const y = window.scrollY;
-      const p1 = Math.min(1, Math.max(0, y / (1.3 * vh)));
-      el.style.setProperty("--p1", p1.toFixed(3));
+
+      /* intro progress — pin is 200vh, so the scene completes at 100vh */
+      if (!introDoneRef.current) {
+        const p1 = Math.min(1, Math.max(0, y / vh));
+        el.style.setProperty("--p1", p1.toFixed(3));
+        setWordsIn(p1 > 0.45);
+        if (p1 >= 1) {
+          introDoneRef.current = true;
+          setIntroDone(true);
+          el.style.setProperty("--p1", "1");
+          /* the pin collapses by 100vh — keep the view steady */
+          requestAnimationFrame(() => {
+            window.scrollTo(0, Math.max(0, window.scrollY - vh));
+          });
+        }
+      }
+
+      /* stars give way to dawn */
       const total = document.documentElement.scrollHeight - vh;
       const p = total > 0 ? y / total : 0;
-      const fade = Math.min(1, Math.max(0, (p - 0.5) / 0.32));
+      const fade = Math.min(1, Math.max(0, (p - 0.45) / 0.32));
       el.style.setProperty("--starfade", (1 - fade).toFixed(3));
-      setWordsIn(p1 > 0.55);
-      setOpen(total - y < 1.15 * vh);
+
+      /* the clouds part with the scroll — and close again */
+      const fr = revealRef.current;
+      if (fr) {
+        const r = fr.getBoundingClientRect();
+        const start = vh * 0.92;
+        const end = vh * 0.42;
+        const part = Math.min(1, Math.max(0, (start - r.top) / (start - end)));
+        el.style.setProperty("--part", part.toFixed(3));
+      }
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -142,8 +194,10 @@ export default function Alba() {
   }, []);
 
   return (
-    <main ref={mainRef} className={s.page}>
-      {/* the sky — fixed, fading as dawn approaches */}
+    <main
+      ref={mainRef}
+      className={`${s.page} ${introDone ? s.introDone : ""}`}
+    >
       <div
         className={s.starsFar}
         style={{ boxShadow: starField(7, 130, 0.5) }}
@@ -157,17 +211,21 @@ export default function Alba() {
       <div className={s.meteorA} aria-hidden="true" />
       <div className={s.meteorB} aria-hidden="true" />
 
-      {/* 1 & 2 — the pinned arrival */}
+      {/* the opening scene → becomes the resting top of the site */}
       <section className={s.pin}>
         <div className={s.stage}>
-          <div className={`${s.corner} ${wordsIn ? s.cornerOn : ""}`}>
+          <div
+            className={`${s.corner} ${
+              wordsIn || introDone ? s.cornerOn : ""
+            }`}
+          >
             <a className={s.logoLink} href="/">
               <Logo className={s.cornerLogo} />
             </a>
             <VersionNav className={s.nav} current={23} />
           </div>
 
-          <div className={s.introLogoWrap} aria-hidden={wordsIn}>
+          <div className={s.introLogoWrap} aria-hidden="true">
             <Logo className={s.introLogo} />
           </div>
 
@@ -181,7 +239,7 @@ export default function Alba() {
         </div>
       </section>
 
-      {/* 3 — the astrolabe in the lightening sky */}
+      {/* the astrolabe in the lightening sky */}
       <section
         ref={astroRef}
         className={`${s.instrument} ${live ? s.live : ""}`}
@@ -193,7 +251,6 @@ export default function Alba() {
           fill="none"
           stroke="currentColor"
         >
-          {/* kursi */}
           <circle cx={C} cy={116} r={26} strokeWidth="2.4" opacity="0.85" />
           <circle cx={C} cy={116} r={17} strokeWidth="1" opacity="0.5" />
           <path
@@ -203,7 +260,6 @@ export default function Alba() {
           />
           <path d="M448,206 Q500,190 552,206" strokeWidth="2" opacity="0.85" />
 
-          {/* mater */}
           <circle cx={C} cy={CY} r={382} strokeWidth="2.4" opacity="0.85" />
           <circle cx={C} cy={CY} r={368} strokeWidth="0.8" opacity="0.5" />
           <g className={s.turning}>
@@ -251,7 +307,6 @@ export default function Alba() {
             opacity="0.4"
           />
 
-          {/* alidade */}
           <g className={s.alidade}>
             <line
               x1={C - 330}
@@ -274,8 +329,6 @@ export default function Alba() {
             <circle cx={C} cy={CY} r={12} strokeWidth="1.4" opacity="0.6" />
           </g>
 
-          {/* rete pointers — unfold when seen; tips beckon; names on hover,
-              outside the dial */}
           {BRANCHES.map((b, i) => {
             const t = tipPos(i, n);
             const lab = labelLayout(i, n);
@@ -330,8 +383,10 @@ export default function Alba() {
         </div>
       </section>
 
-      {/* 4 — the answer, in lighter sky */}
-      <section className={s.answerBlock}>
+      {/* the answer, then — one line beneath — the clouds keeping the coda */}
+      <section className={s.closing}>
+        <div className={s.sun} aria-hidden="true" />
+
         <p className={s.answer}>
           At Astu Neon, we don’t shy away from these challenges, we answer
           them. Opening doors, stepping into a boundless universe. An
@@ -340,32 +395,25 @@ export default function Alba() {
           giving us a seat at our table where we remember our most naive,
           uninhibited dreams: to reach the moon, to create new things, to heal.
         </p>
-      </section>
 
-      {/* 5 — the clouds part at dawn */}
-      <section className={`${s.finale} ${open ? s.open : ""}`}>
-        <div className={s.sun} aria-hidden="true" />
+        <div ref={revealRef} className={s.reveal}>
+          <div className={`${s.bank} ${s.bankL}`} aria-hidden="true">
+            <Cloud className={s.cloudBig} />
+            <Cloud className={s.cloudSmall} />
+          </div>
+          <div className={`${s.bank} ${s.bankR}`} aria-hidden="true">
+            <Cloud className={s.cloudBig} />
+            <Cloud className={s.cloudSmall} />
+          </div>
 
-        <div className={`${s.bank} ${s.bankL}`} aria-hidden="true">
-          <span className={s.puffA} />
-          <span className={s.puffB} />
-          <span className={s.puffC} />
-          <span className={s.puffD} />
-        </div>
-        <div className={`${s.bank} ${s.bankR}`} aria-hidden="true">
-          <span className={s.puffA} />
-          <span className={s.puffB} />
-          <span className={s.puffC} />
-          <span className={s.puffD} />
-        </div>
-
-        <div className={s.finaleInner}>
-          <p className={s.coda}>
-            Challenging the impossible. Building it with our own hands.
-          </p>
-          <footer className={s.footer}>
-            <span>© {new Date().getFullYear()} Astu Neon, Inc.</span>
-          </footer>
+          <div className={s.revealInner}>
+            <p className={s.coda}>
+              Challenging the impossible. Building it with our own hands.
+            </p>
+            <footer className={s.footer}>
+              <span>© {new Date().getFullYear()} Astu Neon, Inc.</span>
+            </footer>
+          </div>
         </div>
       </section>
     </main>
