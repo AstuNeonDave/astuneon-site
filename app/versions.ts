@@ -16,4 +16,5 @@ export const VERSIONS: { n: number; roman: string }[] = [
   { n: 20, roman: "XX" },
   { n: 21, roman: "XXI" },
   { n: 22, roman: "XXII" },
+  { n: 23, roman: "XXIII" },
 ];

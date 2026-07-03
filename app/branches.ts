@@ -35,4 +35,9 @@ export const BRANCHES: Branch[] = [
     href: "https://astuneon.tech",
     label: "AI Value Realization",
   },
+  {
+    domain: "astuneon.fun",
+    href: "https://astuneon.fun",
+    label: "Exploration",
+  },
 ];
