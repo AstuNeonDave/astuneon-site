@@ -1,0 +1,348 @@
+/* V22 — "Meccanica del Cielo" · the mechanism of the sky, night into dawn */
+
+.page {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    #04060d 0%,
+    #070a16 52%,
+    #101527 76%,
+    #2b2036 88%,
+    #6e4a3a 96%,
+    #c98d52 100%
+  );
+  color: #eceef4;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 300;
+  overflow: hidden;
+}
+
+.starsFar,
+.starsNear {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.starsFar {
+  animation: twinkle 7s ease-in-out infinite;
+}
+
+.starsNear {
+  width: 2px;
+  height: 2px;
+  animation: twinkle 5s 1.4s ease-in-out infinite;
+}
+
+.meteorA,
+.meteorB {
+  position: absolute;
+  width: 150px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(244, 234, 208, 0.9), transparent);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.meteorA {
+  top: 12%;
+  right: 7%;
+  animation: shoot 16s 4s linear infinite;
+}
+
+.meteorB {
+  top: 28%;
+  right: 42%;
+  animation: shoot 22s 13s linear infinite;
+}
+
+.header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(32px, 5vh, 56px) clamp(24px, 5vw, 64px) 0;
+}
+
+.logoLink {
+  display: inline-block;
+}
+
+.logo {
+  width: clamp(88px, 10vw, 120px);
+  height: auto;
+  color: #eceef4;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  font-size: 0.7rem;
+  letter-spacing: 0.26em;
+  color: rgba(236, 238, 244, 0.5);
+}
+
+.nav a {
+  text-decoration: none;
+}
+
+.nav a[aria-current] {
+  color: #e2c37a;
+}
+
+.instrument {
+  position: relative;
+  max-width: 780px;
+  margin: clamp(8px, 2vh, 24px) auto 0;
+}
+
+.dial {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: #e2c37a;
+  filter: drop-shadow(0 0 34px rgba(226, 195, 122, 0.1));
+}
+
+.turning {
+  transform-origin: 500px 500px;
+  animation: revolve 220s linear infinite;
+}
+
+.sight {
+  stroke: currentColor;
+  opacity: 0.35;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 1.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.centerMark {
+  width: clamp(64px, 8vw, 96px);
+  height: auto;
+  color: rgba(236, 238, 244, 0.92);
+  filter: drop-shadow(0 0 20px rgba(226, 195, 122, 0.3));
+}
+
+.body {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  text-decoration: none;
+  color: inherit;
+  z-index: 1;
+}
+
+/* ignite on arrival, then beckon in turn */
+.planet {
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: #f4ead0;
+  box-shadow: 0 0 0 3px rgba(244, 234, 208, 0.14),
+    0 0 18px 4px rgba(244, 234, 208, 0.45);
+  transition: box-shadow 0.5s ease, transform 0.5s ease;
+  animation: ignite 1.2s cubic-bezier(0.22, 1, 0.36, 1) both,
+    beckon var(--cycle, 8.4s) infinite;
+}
+
+.bodyLabel {
+  position: absolute;
+  left: 50%;
+  top: 16px;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 210px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.bodyLabel strong {
+  display: block;
+  font-weight: 400;
+  font-size: 0.76rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #e2c37a;
+}
+
+.bodyLabel em {
+  display: block;
+  margin-top: 3px;
+  font-style: normal;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: rgba(236, 238, 244, 0.6);
+}
+
+.body:hover .planet,
+.body:focus-visible .planet {
+  box-shadow: 0 0 0 5px rgba(226, 195, 122, 0.25),
+    0 0 28px 9px rgba(226, 195, 122, 0.65);
+  transform: scale(1.4);
+  animation-play-state: paused, paused;
+}
+
+.body:hover .bodyLabel,
+.body:focus-visible .bodyLabel {
+  opacity: 1;
+}
+
+.dawn {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(56px, 10vh, 110px) clamp(24px, 5vw, 64px) 0;
+  text-align: center;
+}
+
+.question {
+  font-weight: 200;
+  font-size: clamp(1.5rem, 3vw, 2.6rem);
+  line-height: 1.34;
+  letter-spacing: 0.018em;
+  text-shadow: 0 1px 18px rgba(4, 6, 13, 0.5);
+}
+
+.answer {
+  margin-top: clamp(24px, 4vh, 40px);
+  font-size: clamp(0.98rem, 1.3vw, 1.15rem);
+  line-height: 1.9;
+  letter-spacing: 0.016em;
+  color: rgba(244, 240, 232, 0.86);
+  text-shadow: 0 1px 18px rgba(4, 6, 13, 0.5);
+}
+
+.coda {
+  margin-top: clamp(20px, 3vh, 32px);
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  font-size: clamp(1.4rem, 2.5vw, 2.1rem);
+  color: #f8e3b6;
+  text-shadow: 0 1px 20px rgba(4, 6, 13, 0.45);
+}
+
+.footer {
+  margin-top: clamp(56px, 10vh, 100px);
+  padding: 24px 0 44px;
+  border-top: 1px solid rgba(244, 240, 232, 0.28);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(30, 20, 12, 0.75);
+}
+
+@keyframes revolve {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ignite {
+  from {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes beckon {
+  0%,
+  14%,
+  100% {
+    box-shadow: 0 0 0 3px rgba(244, 234, 208, 0.14),
+      0 0 18px 4px rgba(244, 234, 208, 0.45);
+    transform: scale(1);
+  }
+  6% {
+    box-shadow: 0 0 0 5px rgba(226, 195, 122, 0.3),
+      0 0 30px 11px rgba(226, 195, 122, 0.8);
+    transform: scale(1.45);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes shoot {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(-35deg);
+  }
+  2% {
+    opacity: 1;
+  }
+  9% {
+    opacity: 0;
+    transform: translate(-42vw, 29vh) rotate(-35deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-42vw, 29vh) rotate(-35deg);
+  }
+}
+
+@media (max-width: 760px) {
+  .bodyLabel {
+    opacity: 1;
+  }
+  .bodyLabel em {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .turning,
+  .sight,
+  .planet,
+  .starsFar,
+  .starsNear,
+  .meteorA,
+  .meteorB {
+    animation: none;
+  }
+  .sight {
+    stroke-dashoffset: 0;
+  }
+}
