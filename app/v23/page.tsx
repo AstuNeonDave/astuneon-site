@@ -105,6 +105,7 @@ export default function Alba() {
   const [revealed, setRevealed] = useState(0);
   const [spot, setSpot] = useState(-1);
   const [cycling, setCycling] = useState(false);
+  const [whisper, setWhisper] = useState(false);
 
   const goPhase = (p: Phase) => {
     phaseRef.current = p;
@@ -117,8 +118,30 @@ export default function Alba() {
       history.scrollRestoration = "manual";
     }
     window.scrollTo(0, 0);
+    /* for the ones who look where no one looks */
+    console.log(
+      "%c“Always do the right thing when no one is looking.”",
+      "font-style: italic; font-size: 14px; color: #c9a35c;"
+    );
     const t = timers.current;
     return () => t.forEach((id) => window.clearInterval(id));
+  }, []);
+
+  /* the third belief appears only when no one is looking */
+  useEffect(() => {
+    let t = 0;
+    const arm = () => {
+      setWhisper(false);
+      window.clearTimeout(t);
+      t = window.setTimeout(() => setWhisper(true), 60000);
+    };
+    arm();
+    const evs = ["scroll", "mousemove", "keydown", "touchstart"];
+    evs.forEach((e) => window.addEventListener(e, arm, { passive: true }));
+    return () => {
+      window.clearTimeout(t);
+      evs.forEach((e) => window.removeEventListener(e, arm));
+    };
   }, []);
 
   /* lock the page while a gate is active */
@@ -307,6 +330,14 @@ export default function Alba() {
             most impossible questions, stowed away a myopic life?
           </h1>
         </div>
+
+        {/* one unmarked star keeps the third belief */}
+        <div className={s.secret}>
+          <span className={s.secretStar} aria-hidden="true" />
+          <span className={s.secretText}>
+            “Always do the right thing when no one is looking.”
+          </span>
+        </div>
       </section>
 
       {/* the dial — locks centered; one scroll summons the pointers */}
@@ -456,6 +487,9 @@ export default function Alba() {
         <div className={s.center} aria-hidden="true">
           <Logo className={s.centerMark} />
         </div>
+
+        {/* arrives only after the spotlight pass has said it visually */}
+        <p className={s.dialCaption}>Ideas power everything</p>
       </section>
 
       {/* the answer, and the coda golden in the dawn */}
@@ -471,6 +505,11 @@ export default function Alba() {
           uninhibited dreams: to reach the moon, to create new things, to heal.
         </p>
 
+        <p className={s.epigraph}>
+          “It always seems impossible until it is done.”
+          <span className={s.epigraphAttr}>— Nelson Mandela</span>
+        </p>
+
         <p className={s.coda}>
           Challenging the impossible. Building it with our own hands.
         </p>
@@ -479,6 +518,14 @@ export default function Alba() {
           <span>© {new Date().getFullYear()} Astu Neon, Inc.</span>
         </footer>
       </section>
+
+      {/* surfaces only after a minute of stillness */}
+      <div
+        className={`${s.whisper} ${whisper ? s.whisperOn : ""}`}
+        aria-hidden="true"
+      >
+        “Always do the right thing when no one is looking.”
+      </div>
     </main>
   );
 }
