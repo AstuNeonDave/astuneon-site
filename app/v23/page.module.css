@@ -1,5 +1,5 @@
-/* V23 — "L'Alba" · second draft: tighter night, one-time opening scene,
-   engraved clouds that part with the scroll */
+/* V23 — "L'Alba" · third draft: overture gate, dial gate, outside names,
+   equal pointers, clouds that wait to be seen */
 
 .page {
   position: relative;
@@ -68,73 +68,39 @@
   animation: shoot 21s 11s linear infinite;
 }
 
-/* ---------- the opening scene ---------- */
+/* ---------- the overture ---------- */
 
-/* plays once: pin is 200vh while the scene runs, then collapses */
-.pin {
-  position: relative;
-  height: 200vh;
-}
-
-.introDone .pin {
-  height: 100svh;
-}
-
-.stage {
-  position: sticky;
-  top: 0;
-  height: 100svh;
-  overflow: hidden;
+/* fixed overlay: the page beneath never moves; scrolling only fades this */
+.overture {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.overtureLogo {
+  width: clamp(180px, 26vw, 340px);
+  height: auto;
+  color: #eceef4;
+  filter: drop-shadow(0 0 34px rgba(226, 195, 122, 0.18));
+  opacity: calc(1 - var(--intro, 0) * 1.35);
+}
+
+/* ---------- the true top ---------- */
+
+.top {
+  position: relative;
+  height: 100svh;
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 clamp(24px, 5vw, 64px);
 }
 
-/* the mark alone — rises away as you scroll; gone for good afterwards */
-.introLogoWrap {
-  transform: translateY(calc(var(--p1, 0) * -110px));
-  opacity: calc(1 - var(--p1, 0) * 2.2);
-  pointer-events: none;
-}
-
-.introDone .introLogoWrap {
-  display: none;
-}
-
-.introLogo {
-  width: clamp(180px, 26vw, 340px);
-  height: auto;
-  color: #eceef4;
-  filter: drop-shadow(0 0 34px rgba(226, 195, 122, 0.18));
-}
-
-/* the questions — below the mark, fading up and in */
-.introQuestion {
-  margin-top: 5vh;
-  width: min(58ch, 78vw);
-  transform: translateY(
-    calc((1 - clamp(0, calc((var(--p1, 0) - 0.3) * 2.4), 1)) * 40px)
-  );
-  opacity: clamp(0, calc((var(--p1, 0) - 0.3) * 2.4), 1);
-  text-align: center;
-}
-
-.introDone .introQuestion {
-  margin-top: 0;
-  transform: none;
-  opacity: 1;
-}
-
-.question {
-  font-weight: 200;
-  font-size: clamp(1.4rem, 2.8vw, 2.4rem);
-  line-height: 1.42;
-  letter-spacing: 0.02em;
-}
-
-/* the mark settles into the corner a beat after the words */
+/* hidden during the overture; fades in as the mark fades out */
 .corner {
   position: absolute;
   top: 0;
@@ -145,20 +111,25 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: clamp(28px, 4.5vh, 48px) clamp(24px, 5vw, 64px) 0;
-  opacity: 0;
-  transform: translateY(-8px);
-  transition: opacity 1.4s ease 1.8s, transform 1.4s ease 1.8s;
-  pointer-events: none;
+  opacity: clamp(0, calc((var(--intro, 0) - 0.35) * 1.55), 1);
 }
 
-.cornerOn {
+.topQuestion {
+  width: min(58ch, 78vw);
+  text-align: center;
+  opacity: clamp(0, calc((var(--intro, 0) - 0.35) * 1.55), 1);
+}
+
+.introDone .corner,
+.introDone .topQuestion {
   opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
 }
 
-.introDone .corner {
-  transition-delay: 0s;
+.question {
+  font-weight: 200;
+  font-size: clamp(1.4rem, 2.8vw, 2.4rem);
+  line-height: 1.42;
+  letter-spacing: 0.02em;
 }
 
 .logoLink {
@@ -189,19 +160,20 @@
   color: #e2c37a;
 }
 
-/* ---------- the astrolabe ---------- */
+/* ---------- the dial ---------- */
 
 .instrument {
   position: relative;
-  max-width: 860px;
+  max-width: min(860px, 86vh);
   margin: 0 auto;
-  padding: clamp(16px, 4vh, 48px) 0;
+  padding: clamp(24px, 6vh, 64px) 0;
 }
 
 .dial {
   display: block;
   width: 100%;
   height: auto;
+  overflow: visible;
   color: #d4af6a;
   filter: drop-shadow(0 0 34px rgba(212, 175, 106, 0.14));
 }
@@ -235,6 +207,7 @@
   cursor: pointer;
 }
 
+/* each pointer waits for its turn of the wheel */
 .blade {
   opacity: 0;
   transform-box: fill-box;
@@ -242,8 +215,8 @@
   transition: fill 0.5s ease, stroke 0.5s ease;
 }
 
-.live .blade {
-  animation: unfold 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+.shown .blade {
+  animation: unfold 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .pointer:hover .blade,
@@ -261,9 +234,9 @@
   filter: drop-shadow(0 0 6px rgba(244, 234, 208, 0.55));
 }
 
-.live .tipStar {
-  animation: ignite 1.2s cubic-bezier(0.22, 1, 0.36, 1) both,
-    beckon var(--cycle, 9.1s) infinite;
+.shown .tipStar {
+  animation: ignite 0.9s cubic-bezier(0.22, 1, 0.36, 1) both,
+    beckon var(--cycle, 9.1s) var(--beckonDelay, 0s) infinite;
 }
 
 .pointer:hover .tipStar,
@@ -301,13 +274,13 @@
   letter-spacing: 0.05em;
 }
 
-/* ---------- the closing: answer, then the kept coda ---------- */
+/* ---------- the closing ---------- */
 
 .closing {
   position: relative;
   max-width: 780px;
   margin: 0 auto;
-  padding: clamp(48px, 9vh, 100px) clamp(24px, 5vw, 64px) clamp(48px, 9vh, 90px);
+  padding: clamp(48px, 9vh, 100px) clamp(24px, 5vw, 64px) 30vh;
   text-align: center;
 }
 
@@ -379,7 +352,6 @@
   position: absolute;
   top: 50%;
   width: 62%;
-  transform: translateY(-50%);
   pointer-events: none;
   z-index: 2;
 }
@@ -522,13 +494,9 @@
   .alidade {
     animation: none;
   }
-  .live .blade,
-  .live .tipStar {
+  .shown .blade,
+  .shown .tipStar {
     animation: none;
     opacity: 1;
-  }
-  .corner {
-    transition-duration: 0.3s;
-    transition-delay: 0s;
   }
 }
