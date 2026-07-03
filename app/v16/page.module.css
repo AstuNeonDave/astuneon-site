@@ -1,0 +1,230 @@
+/* V16 — "Notturnale" · an engraved gold plate in a dark room */
+
+.page {
+  position: relative;
+  min-height: 100svh;
+  background: radial-gradient(
+      ellipse 65% 50% at 50% 38%,
+      rgba(66, 48, 22, 0.4) 0%,
+      transparent 62%
+    ),
+    #14100a;
+  color: #efe6d2;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 300;
+  overflow: hidden;
+}
+
+.grain {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.06;
+}
+
+.header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(32px, 5vh, 56px) clamp(24px, 5vw, 64px) 0;
+}
+
+.logoLink {
+  display: inline-block;
+}
+
+.logo {
+  width: clamp(88px, 10vw, 120px);
+  height: auto;
+  color: #efe6d2;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  font-size: 0.7rem;
+  letter-spacing: 0.26em;
+  color: rgba(239, 230, 210, 0.5);
+}
+
+.nav a {
+  text-decoration: none;
+}
+
+.nav a[aria-current] {
+  color: #d9b36c;
+}
+
+.instrument {
+  position: relative;
+  max-width: 760px;
+  margin: clamp(8px, 2vh, 24px) auto 0;
+}
+
+.plate {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: #d9b36c;
+  filter: drop-shadow(0 0 40px rgba(217, 179, 108, 0.14));
+}
+
+.needle {
+  transform-origin: 500px 500px;
+  animation: sweep 190s linear infinite;
+}
+
+.center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.centerMark {
+  width: clamp(60px, 7.5vw, 92px);
+  height: auto;
+  color: rgba(239, 230, 210, 0.92);
+  filter: drop-shadow(0 0 18px rgba(217, 179, 108, 0.35));
+}
+
+.inscription {
+  cursor: pointer;
+}
+
+.crownText {
+  fill: #efe6d2;
+  stroke: none;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: fill 0.4s ease;
+}
+
+.medCore {
+  fill: rgba(217, 179, 108, 0.35);
+  transition: fill 0.4s ease;
+}
+
+.inscription:hover .crownText,
+.inscription:focus-visible .crownText {
+  fill: #f0d9a8;
+}
+
+.inscription:hover .medCore,
+.inscription:focus-visible .medCore {
+  fill: #f0d9a8;
+}
+
+.legend {
+  position: relative;
+  z-index: 1;
+  max-width: 980px;
+  margin: clamp(24px, 4vh, 48px) auto 0;
+  padding: 0 clamp(24px, 5vw, 64px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px 34px;
+}
+
+.legendItem {
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+}
+
+.legendItem strong {
+  display: block;
+  font-weight: 400;
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #d9b36c;
+}
+
+.legendItem em {
+  display: block;
+  margin-top: 2px;
+  font-style: normal;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  color: rgba(239, 230, 210, 0.55);
+}
+
+.legendItem:hover strong {
+  color: #f0d9a8;
+}
+
+.below {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(40px, 7vh, 80px) clamp(24px, 5vw, 64px) 0;
+  text-align: center;
+}
+
+.question {
+  font-weight: 200;
+  font-size: clamp(1.5rem, 3vw, 2.6rem);
+  line-height: 1.34;
+  letter-spacing: 0.018em;
+}
+
+.answer {
+  margin-top: clamp(24px, 4vh, 40px);
+  font-size: clamp(0.98rem, 1.3vw, 1.15rem);
+  line-height: 1.9;
+  letter-spacing: 0.016em;
+  color: rgba(239, 230, 210, 0.7);
+}
+
+.coda {
+  margin-top: clamp(20px, 3vh, 32px);
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+  color: #d9b36c;
+}
+
+.footer {
+  max-width: 1280px;
+  margin: clamp(40px, 7vh, 72px) auto 0;
+  padding: 28px clamp(24px, 5vw, 64px) 44px;
+  border-top: 1px solid rgba(239, 230, 210, 0.14);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(239, 230, 210, 0.5);
+}
+
+@keyframes sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 760px) {
+  .crownText {
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .needle {
+    animation: none;
+  }
+}
