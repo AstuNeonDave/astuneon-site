@@ -9,10 +9,9 @@ import s from "./page.module.css";
 /* V23 — "L'Alba" · fourth draft.
    - One scroll action completes the overture (auto-tween).
    - One scroll action at the dial summons all pointers in sequence,
-     then each star takes a spotlight turn — glowing bright while its
-     name fades in and out — before the sky settles into the beckon
-     cycle with hover-to-name.
-   - No clouds: the coda stands golden in the dawn. */
+     then every name breathes in together and fades, before the sky
+     settles into the beckon cycle with hover-to-name.
+   - The coda is Mandela's line, golden in the dawn. */
 
 const C = 500;
 const CY = 590;
@@ -20,7 +19,7 @@ const R1 = 348;
 const R_LABEL = 448;
 const BEACON = 1.3;
 const REVEAL_MS = 430; /* between pointer arrivals */
-const SPOT_MS = 1600; /* each star's spotlight turn */
+const SPOT_MS = 1600; /* how long the names hold together */
 
 function angleOf(i: number, n: number) {
   return ((-90 + ((i + 0.5) * 360) / n) * Math.PI) / 180;
@@ -103,7 +102,7 @@ export default function Alba() {
 
   const [phase, setPhase] = useState<Phase>("intro");
   const [revealed, setRevealed] = useState(0);
-  const [spot, setSpot] = useState(-1);
+  const [showAll, setShowAll] = useState(false);
   const [cycling, setCycling] = useState(false);
   const [whisper, setWhisper] = useState(false);
 
@@ -170,8 +169,8 @@ export default function Alba() {
       requestAnimationFrame(tick);
     };
 
-    /* one scroll: the pointers arrive in sequence, then the spotlight
-       pass, then the beckon cycle */
+    /* one scroll: the pointers arrive in sequence, then all names
+       breathe together, then the beckon cycle */
     const startDial = () => {
       if (dialTriggered.current) return;
       dialTriggered.current = true;
@@ -184,19 +183,14 @@ export default function Alba() {
           timers.current = [];
           dialDoneRef.current = true;
           goPhase("free");
-          let k = 0;
-          setSpot(0);
-          const show = window.setInterval(() => {
-            k += 1;
-            if (k >= n) {
-              window.clearInterval(show);
-              setSpot(-1);
-              setCycling(true);
-            } else {
-              setSpot(k);
-            }
-          }, SPOT_MS);
-          timers.current.push(show);
+          /* all names breathe in together, hold, and fade out */
+          const t1 = window.setTimeout(() => setShowAll(true), 500);
+          const t2 = window.setTimeout(() => setShowAll(false), 500 + SPOT_MS);
+          const t3 = window.setTimeout(
+            () => setCycling(true),
+            500 + SPOT_MS + 900
+          );
+          timers.current.push(t1, t2, t3);
         }
       };
       step();
@@ -343,7 +337,9 @@ export default function Alba() {
       {/* the dial — locks centered; one scroll summons the pointers */}
       <section
         ref={astroRef}
-        className={`${s.instrument} ${cycling ? s.cycling : ""}`}
+        className={`${s.instrument} ${cycling ? s.cycling : ""} ${
+          showAll ? s.showAll : ""
+        }`}
       >
         <div className={s.dialWrap}>
         <svg
@@ -435,14 +431,11 @@ export default function Alba() {
             const t = tipPos(i, n);
             const lab = labelLayout(i, n);
             const shown = i < revealed;
-            const lit = spot === i;
             return (
               <a
                 key={b.domain}
                 href={b.href}
-                className={`${s.pointer} ${shown ? s.shown : ""} ${
-                  lit ? s.spotlight : ""
-                }`}
+                className={`${s.pointer} ${shown ? s.shown : ""}`}
               >
                 <path
                   d={pointerPath(i, n)}
@@ -490,11 +483,11 @@ export default function Alba() {
         </div>
         </div>
 
-        {/* arrives only after the spotlight pass has said it visually */}
+        {/* arrives only after the dial has said it visually */}
         <p className={s.dialCaption}>Ideas power everything</p>
       </section>
 
-      {/* the answer, and the coda golden in the dawn */}
+      {/* the answer, and Mandela golden in the dawn */}
       <section className={s.closing}>
         <div className={s.sun} aria-hidden="true" />
 
@@ -507,14 +500,10 @@ export default function Alba() {
           uninhibited dreams: to reach the moon, to create new things, to heal.
         </p>
 
-        <p className={s.epigraph}>
-          “It always seems impossible until it is done.”
-          <span className={s.epigraphAttr}>— Nelson Mandela</span>
-        </p>
-
         <p className={s.coda}>
-          Challenging the impossible. Building it with our own hands.
+          “It always seems impossible until it is done.”
         </p>
+        <p className={s.codaAttr}>— Nelson Mandela</p>
 
         <footer className={s.footer}>
           <span>© {new Date().getFullYear()} Astu Neon, Inc.</span>

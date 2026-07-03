@@ -1,5 +1,5 @@
-/* V23 — "L'Alba" · fourth draft: one-scroll gates, spotlight pass,
-   golden coda, no clouds */
+/* V23 — "L'Alba" · fourth draft: one-scroll gates, names breathe together,
+   Mandela coda, no clouds */
 
 .page {
   position: relative;
@@ -246,13 +246,14 @@
     beckon var(--cycle, 9.1s) var(--beckonDelay, 0s) infinite;
 }
 
-/* the spotlight pass: one star burns bright, its name breathes with it */
-.spotlight .tipStar,
-.cycling .spotlight .tipStar {
-  animation: ignite 0s both;
+/* after the pointers arrive: every name breathes in together, then out */
+.showAll .lab {
   opacity: 1;
-  transform: scale(1.8);
-  filter: drop-shadow(0 0 18px rgba(255, 224, 150, 1));
+}
+
+.showAll .shown .tipStar {
+  filter: drop-shadow(0 0 14px rgba(255, 224, 150, 0.9));
+  transform: scale(1.35);
 }
 
 .pointer:hover .tipStar,
@@ -268,8 +269,7 @@
 }
 
 .pointer:hover .lab,
-.pointer:focus-visible .lab,
-.spotlight .lab {
+.pointer:focus-visible .lab {
   opacity: 1;
 }
 
@@ -406,33 +406,11 @@
   text-shadow: 0 1px 18px rgba(10, 12, 24, 0.4);
 }
 
-/* borrowed wisdom, then our answer to it */
-.epigraph {
-  position: relative;
-  z-index: 1;
-  margin-top: 2.6em;
-  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
-  font-weight: 400;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: #f6ead4;
-  text-shadow: 0 1px 2px rgba(43, 22, 8, 0.65), 0 2px 20px rgba(43, 22, 8, 0.5);
-}
-
-.epigraphAttr {
-  display: block;
-  margin-top: 0.9em;
-  font-size: 0.78rem;
-  letter-spacing: 0.24em;
-  color: rgba(246, 234, 212, 0.75);
-  text-shadow: 0 1px 2px rgba(43, 22, 8, 0.6);
-}
-
 /* golden, and still the brightest thing in the dawn */
 .coda {
   position: relative;
   z-index: 1;
-  margin-top: 1.1em;
+  margin-top: 1.9em;
   font-family: var(--font-serif), serif;
   font-style: italic;
   font-weight: 400;
@@ -440,6 +418,18 @@
   line-height: 1.35;
   color: #f8e3b6;
   text-shadow: 0 1px 2px rgba(43, 22, 8, 0.6), 0 3px 30px rgba(43, 22, 8, 0.55);
+}
+
+.codaAttr {
+  position: relative;
+  z-index: 1;
+  margin-top: 1.1em;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(248, 227, 182, 0.8);
+  text-shadow: 0 1px 2px rgba(43, 22, 8, 0.6);
 }
 
 .footer {
