@@ -41,6 +41,10 @@ export default function Osservatorio() {
           <a href="/v12" aria-current="page">
             XII
           </a>
+          <a href="/v13">XIII</a>
+          <a href="/v14">XIV</a>
+          <a href="/v15">XV</a>
+          <a href="/v16">XVI</a>
         </nav>
       </header>
 

@@ -2,9 +2,9 @@ import Logo from "../Logo";
 import { BRANCHES } from "../branches";
 import s from "./page.module.css";
 
-/* V11 — "Cielo Aperto": a night walk through the open sky that ends at
-   dawn. The ventures assemble into a new constellation mid-journey;
-   its points are computed from the array. */
+/* V13 — "Segno": the constellation IS the mark. The wordmark is written
+   across the night in hundreds of tiny stars (a star-dot field masked by
+   the logo itself); the six ventures burn brightest within it. */
 
 function seeded(seed: number) {
   let state = seed;
@@ -16,42 +16,38 @@ function seeded(seed: number) {
 
 function starField(seed: number, count: number, alpha: number) {
   const rnd = seeded(seed);
-  const shadows: string[] = [];
+  const out: string[] = [];
   for (let i = 0; i < count; i++) {
-    shadows.push(
+    out.push(
       `${(rnd() * 100).toFixed(2)}vw ${(rnd() * 100).toFixed(
         2
       )}vh 0 rgba(244,234,208,${alpha})`
     );
   }
-  return shadows.join(",");
+  return out.join(",");
 }
 
-const YS = [34, 58, 26, 62, 38, 54];
+/* six anchor stars placed on the letterforms (percent of the mark's box) */
+const ANCHORS = [
+  { x: 11, y: 20 },
+  { x: 50, y: 16 },
+  { x: 88, y: 22 },
+  { x: 16, y: 78 },
+  { x: 57, y: 82 },
+  { x: 91, y: 74 },
+];
 
-function point(i: number, n: number) {
-  const x = 10 + (i * 80) / Math.max(n - 1, 1);
-  const y = YS[i % YS.length];
-  return { x, y };
-}
-
-export default function CieloAperto() {
-  const n = BRANCHES.length;
-  const poly = BRANCHES.map((_, i) => {
-    const p = point(i, n);
-    return `${p.x},${p.y}`;
-  }).join(" ");
-
+export default function Segno() {
   return (
     <main className={s.page}>
       <div
         className={s.starsFar}
-        style={{ boxShadow: starField(7, 110, 0.5) }}
+        style={{ boxShadow: starField(11, 100, 0.45) }}
         aria-hidden="true"
       />
       <div
         className={s.starsNear}
-        style={{ boxShadow: starField(23, 45, 0.85) }}
+        style={{ boxShadow: starField(31, 40, 0.8) }}
         aria-hidden="true"
       />
 
@@ -67,41 +63,25 @@ export default function CieloAperto() {
           <a href="/v8">VIII</a>
           <a href="/v9">IX</a>
           <a href="/v10">X</a>
-          <a href="/v11" aria-current="page">
-            XI
-          </a>
+          <a href="/v11">XI</a>
           <a href="/v12">XII</a>
-          <a href="/v13">XIII</a>
+          <a href="/v13" aria-current="page">
+            XIII
+          </a>
           <a href="/v14">XIV</a>
           <a href="/v15">XV</a>
           <a href="/v16">XVI</a>
         </nav>
       </header>
 
-      <section className={s.opening}>
-        <h1 className={s.question}>
-          What if we, just you and I, built a whole economy? Bottled a
-          sun-drenched paradise to share around a table? What if we asked the
-          most impossible questions, stowed away a myopic life?
-        </h1>
-      </section>
-
-      <section className={s.constellation}>
-        <svg
-          className={s.figure}
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <polyline
-            points={poly}
-            stroke="currentColor"
-            strokeWidth="0.08"
-            fill="none"
-          />
-        </svg>
+      <section className={s.skyMark}>
+        <div className={s.markGlow} aria-hidden="true" />
+        <div className={s.markStars} aria-hidden="true">
+          <div className={s.dotsA} />
+          <div className={s.dotsB} />
+        </div>
         {BRANCHES.map((b, i) => {
-          const p = point(i, n);
+          const p = ANCHORS[i % ANCHORS.length];
           return (
             <a
               key={b.domain}
@@ -122,7 +102,12 @@ export default function CieloAperto() {
         })}
       </section>
 
-      <section className={s.dawn}>
+      <section className={s.below}>
+        <h1 className={s.question}>
+          What if we, just you and I, built a whole economy? Bottled a
+          sun-drenched paradise to share around a table? What if we asked the
+          most impossible questions, stowed away a myopic life?
+        </h1>
         <p className={s.answer}>
           At Astu Neon, we don’t shy away from these challenges, we answer
           them. Opening doors, stepping into a boundless universe. An
@@ -134,10 +119,11 @@ export default function CieloAperto() {
         <p className={s.coda}>
           Challenging the impossible. Building it with our own hands.
         </p>
-        <footer className={s.footer}>
-          <span>© {new Date().getFullYear()} Astu Neon, Inc.</span>
-        </footer>
       </section>
+
+      <footer className={s.footer}>
+        <span>© {new Date().getFullYear()} Astu Neon, Inc.</span>
+      </footer>
     </main>
   );
 }
