@@ -1,4 +1,5 @@
 import Logo from "../Logo";
+import VersionNav from "../VersionNav";
 import { BRANCHES } from "../branches";
 import s from "./page.module.css";
 
@@ -49,23 +50,7 @@ export default function AstrolabioDOro() {
         <a className={s.logoLink} href="/">
           <Logo className={s.logo} />
         </a>
-        <nav className={s.nav} aria-label="Versions">
-          <a href="/v4">IV</a>
-          <a href="/v5">V</a>
-          <a href="/v6">VI</a>
-          <a href="/v7">VII</a>
-          <a href="/v8">VIII</a>
-          <a href="/v9">IX</a>
-          <a href="/v10">X</a>
-          <a href="/v11">XI</a>
-          <a href="/v12">XII</a>
-          <a href="/v13">XIII</a>
-          <a href="/v14">XIV</a>
-          <a href="/v15" aria-current="page">
-            XV
-          </a>
-          <a href="/v16">XVI</a>
-        </nav>
+        <VersionNav className={s.nav} current={15} />
       </header>
 
       <section className={s.instrument}>
