@@ -6,22 +6,21 @@ import VersionNav from "../VersionNav";
 import { BRANCHES } from "../branches";
 import s from "./page.module.css";
 
-/* V23 — "L'Alba" · third draft.
-   Two scroll-gates:
-   1. The overture — the page holds still; scrolling only fades the mark
-      away, revealing the true top (corner mark + questions). Then the
-      page is free.
-   2. The dial — when the astrolabe reaches center it locks there, and
-      each turn of the wheel summons one pointer. When all seven stand,
-      the page is free again and descends to dawn. */
+/* V23 — "L'Alba" · fourth draft.
+   - One scroll action completes the overture (auto-tween).
+   - One scroll action at the dial summons all pointers in sequence,
+     then each star takes a spotlight turn — glowing bright while its
+     name fades in and out — before the sky settles into the beckon
+     cycle with hover-to-name.
+   - No clouds: the coda stands golden in the dawn. */
 
 const C = 500;
 const CY = 590;
-const R1 = 348; /* all pointers the same (longer) length */
-const R_LABEL = 448; /* names live fully outside the dial */
+const R1 = 348;
+const R_LABEL = 448;
 const BEACON = 1.3;
-const INTRO_TRAVEL = 700; /* wheel-pixels to complete the overture */
-const REVEAL_STEP = 170; /* wheel-pixels per pointer */
+const REVEAL_MS = 430; /* between pointer arrivals */
+const SPOT_MS = 1600; /* each star's spotlight turn */
 
 function angleOf(i: number, n: number) {
   return ((-90 + ((i + 0.5) * 360) / n) * Math.PI) / 180;
@@ -86,53 +85,26 @@ function starField(seed: number, count: number, alpha: number) {
   return out.join(",");
 }
 
-/* engraved cloud — scalloped line-work in the astrolabe's hand */
-function Cloud({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 640 300"
-      xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="xMidYMid meet"
-    >
-      <path
-        className={s.cloudBody}
-        d="M86,236 Q40,236 36,196 Q32,156 76,148 Q68,106 114,96 Q124,58 172,64 Q192,26 244,38 Q288,10 336,36 Q384,20 412,58 Q462,50 480,94 Q528,96 534,142 Q572,152 566,194 Q560,232 516,236 Z"
-      />
-      <path
-        className={s.cloudLine}
-        d="M120,196 Q160,178 208,190 Q252,168 306,184"
-      />
-      <path
-        className={s.cloudLine}
-        d="M348,178 Q394,160 442,176 Q474,166 502,180"
-      />
-      <path
-        className={s.cloudLine}
-        d="M180,128 Q222,112 264,126 Q306,104 352,122"
-      />
-    </svg>
-  );
-}
-
 type Phase = "intro" | "free" | "dial";
 
 export default function Alba() {
   const n = BRANCHES.length;
   const mainRef = useRef<HTMLElement | null>(null);
   const astroRef = useRef<HTMLElement | null>(null);
-  const revealRef = useRef<HTMLDivElement | null>(null);
 
   const phaseRef = useRef<Phase>("intro");
-  const introAcc = useRef(0);
-  const dialAcc = useRef(0);
-  const revealedRef = useRef(0);
+  const introStarted = useRef(false);
+  const dialTriggered = useRef(false);
   const dialDoneRef = useRef(false);
+  const revealedRef = useRef(0);
   const lastY = useRef(0);
   const touchY = useRef(0);
+  const timers = useRef<number[]>([]);
 
   const [phase, setPhase] = useState<Phase>("intro");
   const [revealed, setRevealed] = useState(0);
+  const [spot, setSpot] = useState(-1);
+  const [cycling, setCycling] = useState(false);
 
   const goPhase = (p: Phase) => {
     phaseRef.current = p;
@@ -145,6 +117,8 @@ export default function Alba() {
       history.scrollRestoration = "manual";
     }
     window.scrollTo(0, 0);
+    const t = timers.current;
+    return () => t.forEach((id) => window.clearInterval(id));
   }, []);
 
   /* lock the page while a gate is active */
@@ -156,40 +130,64 @@ export default function Alba() {
   }, [phase]);
 
   useEffect(() => {
-    const el = mainRef.current;
-    const vhOf = () => window.innerHeight;
+    /* one scroll: the mark dissolves on its own */
+    const startIntro = () => {
+      if (introStarted.current) return;
+      introStarted.current = true;
+      const m = mainRef.current;
+      const t0 = performance.now();
+      const dur = 1300;
+      const tick = (t: number) => {
+        const p = Math.min(1, (t - t0) / dur);
+        const e = 1 - Math.pow(1 - p, 3);
+        m?.style.setProperty("--intro", e.toFixed(3));
+        if (p < 1) requestAnimationFrame(tick);
+        else goPhase("free");
+      };
+      requestAnimationFrame(tick);
+    };
+
+    /* one scroll: the pointers arrive in sequence, then the spotlight
+       pass, then the beckon cycle */
+    const startDial = () => {
+      if (dialTriggered.current) return;
+      dialTriggered.current = true;
+      const step = () => {
+        if (revealedRef.current >= n) return;
+        revealedRef.current += 1;
+        setRevealed(revealedRef.current);
+        if (revealedRef.current >= n) {
+          timers.current.forEach((id) => window.clearInterval(id));
+          timers.current = [];
+          dialDoneRef.current = true;
+          goPhase("free");
+          let k = 0;
+          setSpot(0);
+          const show = window.setInterval(() => {
+            k += 1;
+            if (k >= n) {
+              window.clearInterval(show);
+              setSpot(-1);
+              setCycling(true);
+            } else {
+              setSpot(k);
+            }
+          }, SPOT_MS);
+          timers.current.push(show);
+        }
+      };
+      step();
+      const id = window.setInterval(step, REVEAL_MS);
+      timers.current.push(id);
+    };
 
     const consume = (delta: number) => {
-      const m = mainRef.current;
-      if (!m) return;
       if (phaseRef.current === "intro") {
-        introAcc.current = Math.max(
-          0,
-          Math.min(INTRO_TRAVEL, introAcc.current + delta)
-        );
-        const p = introAcc.current / INTRO_TRAVEL;
-        m.style.setProperty("--intro", p.toFixed(3));
-        if (p >= 1) goPhase("free");
+        if (delta > 10) startIntro();
       } else if (phaseRef.current === "dial") {
-        dialAcc.current += delta;
-        if (dialAcc.current >= REVEAL_STEP) {
-          dialAcc.current = 0;
-          if (revealedRef.current < n) {
-            revealedRef.current += 1;
-            setRevealed(revealedRef.current);
-            if (revealedRef.current >= n) {
-              dialDoneRef.current = true;
-              goPhase("free");
-            }
-          }
-        } else if (dialAcc.current <= -REVEAL_STEP) {
-          dialAcc.current = 0;
-          if (revealedRef.current > 0) {
-            revealedRef.current -= 1;
-            setRevealed(revealedRef.current);
-          } else {
-            goPhase("free"); /* let the visitor climb back up */
-          }
+        if (delta > 10) startDial();
+        else if (delta < -10 && !dialTriggered.current) {
+          goPhase("free"); /* let the visitor climb back up */
         }
       }
     };
@@ -217,13 +215,14 @@ export default function Alba() {
     const onScroll = () => {
       const m = mainRef.current;
       if (!m) return;
-      const vh = vhOf();
+      const vh = window.innerHeight;
       const y = window.scrollY;
       const goingDown = y > lastY.current;
       lastY.current = y;
 
       /* a scrollbar drag ends the overture instantly */
-      if (phaseRef.current === "intro" && y > 10) {
+      if (phaseRef.current === "intro" && y > 10 && !introStarted.current) {
+        introStarted.current = true;
         m.style.setProperty("--intro", "1");
         goPhase("free");
       }
@@ -245,23 +244,12 @@ export default function Alba() {
         const off = r.top + r.height / 2 - vh / 2;
         if (off < 40 && off > -r.height / 2) {
           goPhase("dial");
-          dialAcc.current = 0;
           window.scrollTo({ top: y + off, behavior: "auto" });
         }
       }
-
-      /* the clouds part with the scroll — and close again */
-      const fr = revealRef.current;
-      if (fr) {
-        const r = fr.getBoundingClientRect();
-        const start = vh * 0.62;
-        const end = vh * 0.28;
-        const part = Math.min(1, Math.max(0, (start - r.top) / (start - end)));
-        m.style.setProperty("--part", part.toFixed(3));
-      }
     };
 
-    el?.style.setProperty("--intro", "0");
+    mainRef.current?.style.setProperty("--intro", "0");
     onScroll();
     window.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("touchstart", onTouchStart, { passive: true });
@@ -321,8 +309,11 @@ export default function Alba() {
         </div>
       </section>
 
-      {/* the dial — locks centered; scrolling summons each pointer */}
-      <section ref={astroRef} className={s.instrument}>
+      {/* the dial — locks centered; one scroll summons the pointers */}
+      <section
+        ref={astroRef}
+        className={`${s.instrument} ${cycling ? s.cycling : ""}`}
+      >
         <svg
           className={s.dial}
           viewBox="0 0 1000 1080"
@@ -412,11 +403,14 @@ export default function Alba() {
             const t = tipPos(i, n);
             const lab = labelLayout(i, n);
             const shown = i < revealed;
+            const lit = spot === i;
             return (
               <a
                 key={b.domain}
                 href={b.href}
-                className={`${s.pointer} ${shown ? s.shown : ""}`}
+                className={`${s.pointer} ${shown ? s.shown : ""} ${
+                  lit ? s.spotlight : ""
+                }`}
               >
                 <path
                   d={pointerPath(i, n)}
@@ -464,7 +458,7 @@ export default function Alba() {
         </div>
       </section>
 
-      {/* the answer, then — one line beneath — the clouds keeping the coda */}
+      {/* the answer, and the coda golden in the dawn */}
       <section className={s.closing}>
         <div className={s.sun} aria-hidden="true" />
 
@@ -477,25 +471,13 @@ export default function Alba() {
           uninhibited dreams: to reach the moon, to create new things, to heal.
         </p>
 
-        <div ref={revealRef} className={s.reveal}>
-          <div className={`${s.bank} ${s.bankL}`} aria-hidden="true">
-            <Cloud className={s.cloudBig} />
-            <Cloud className={s.cloudSmall} />
-          </div>
-          <div className={`${s.bank} ${s.bankR}`} aria-hidden="true">
-            <Cloud className={s.cloudBig} />
-            <Cloud className={s.cloudSmall} />
-          </div>
+        <p className={s.coda}>
+          Challenging the impossible. Building it with our own hands.
+        </p>
 
-          <div className={s.revealInner}>
-            <p className={s.coda}>
-              Challenging the impossible. Building it with our own hands.
-            </p>
-            <footer className={s.footer}>
-              <span>© {new Date().getFullYear()} Astu Neon, Inc.</span>
-            </footer>
-          </div>
-        </div>
+        <footer className={s.footer}>
+          <span>© {new Date().getFullYear()} Astu Neon, Inc.</span>
+        </footer>
       </section>
     </main>
   );
