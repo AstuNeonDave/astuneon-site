@@ -345,6 +345,7 @@ export default function Alba() {
         ref={astroRef}
         className={`${s.instrument} ${cycling ? s.cycling : ""}`}
       >
+        <div className={s.dialWrap}>
         <svg
           className={s.dial}
           viewBox="0 0 1000 1080"
@@ -471,7 +472,7 @@ export default function Alba() {
                   </text>
                   <text
                     x={lab.x}
-                    y={lab.y + 15}
+                    y={lab.y + 20}
                     textAnchor={lab.anchor}
                     className={s.labNote}
                   >
@@ -486,6 +487,7 @@ export default function Alba() {
 
         <div className={s.center} aria-hidden="true">
           <Logo className={s.centerMark} />
+        </div>
         </div>
 
         {/* arrives only after the spotlight pass has said it visually */}

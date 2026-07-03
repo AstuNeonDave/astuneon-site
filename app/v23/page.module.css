@@ -186,10 +186,14 @@
   animation: revolve 170s linear infinite reverse;
 }
 
+.dialWrap {
+  position: relative;
+}
+
 .center {
   position: absolute;
   left: 50%;
-  top: 55.5%;
+  top: 54.63%; /* = CY 590 / viewBox 1080, matched to the dial's true center */
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -270,20 +274,20 @@
 }
 
 .labDomain {
-  fill: #f2ecdd;
+  fill: #f6f0e1;
   stroke: none;
   font-family: var(--font-sans), sans-serif;
-  font-size: 15px;
-  font-weight: 400;
-  letter-spacing: 0.14em;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .labNote {
-  fill: rgba(238, 233, 219, 0.66);
+  fill: rgba(238, 233, 219, 0.78);
   stroke: none;
   font-family: var(--font-sans), sans-serif;
-  font-size: 11.5px;
+  font-size: 15px;
   letter-spacing: 0.05em;
 }
 
@@ -407,19 +411,21 @@
   position: relative;
   z-index: 1;
   margin-top: 2.6em;
-  font-size: 0.82rem;
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
   font-weight: 400;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: rgba(58, 32, 14, 0.85);
+  color: #f6ead4;
+  text-shadow: 0 1px 2px rgba(43, 22, 8, 0.65), 0 2px 20px rgba(43, 22, 8, 0.5);
 }
 
 .epigraphAttr {
   display: block;
   margin-top: 0.9em;
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   letter-spacing: 0.24em;
-  color: rgba(58, 32, 14, 0.6);
+  color: rgba(246, 234, 212, 0.75);
+  text-shadow: 0 1px 2px rgba(43, 22, 8, 0.6);
 }
 
 /* golden, and still the brightest thing in the dawn */
@@ -525,7 +531,7 @@
 
 @media (max-width: 760px) {
   .labDomain {
-    font-size: 12px;
+    font-size: 15px;
   }
   .labNote {
     display: none;
